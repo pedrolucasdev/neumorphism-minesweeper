@@ -1,9 +1,9 @@
 const theme = {
   colors: {
-    lightBackground: '#E8DAB3',
-    darkBackground: '#DD6E41',
-    lightMainColor: '#E8DAB3',
-    darkMainColor: '#1F1B18'
+    lightBackground: '#EBF3FA',
+    darkBackground: '#1D1F23',
+    lightMainColor: '#EBF3FA',
+    darkMainColor: '#1D1F23',
   },
   size: {
     smallest: '25em', //275px
@@ -12,7 +12,7 @@ const theme = {
     medium: '56.25em', //900px
     large: '80em', //1300px
     larger: '90em', //1300px
-    largest: '97em' //1500px
+    largest: '97em', //1500px
   },
   mediaQueries: {
     smallest: `only screen and (max-width: 25em)`,
@@ -21,8 +21,8 @@ const theme = {
     medium: 'only screen and (max-width: 56.25em)',
     large: 'only screen and (max-width: 80em)',
     larger: 'only screen and (max-width: 90em)',
-    largest: 'only screen and (max-width: 97em)'
-  }
+    largest: 'only screen and (max-width: 97em)',
+  },
 };
 
 export default theme;

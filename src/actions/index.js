@@ -1,15 +1,21 @@
 import * as TYPES from './types';
 
-export const updateConfig = config => {
+export const updateConfig = (config) => {
   return {
     type: TYPES.UPDATE_CONFIG,
-    payload: config
+    payload: config,
   };
 };
 
-export const updateMinesweeper = minesweeper => {
+export const updateMinesweeper = (minesweeper) => {
   return {
     type: TYPES.UPDATE_MINESWEEPER,
-    payload: minesweeper
+    payload: minesweeper,
+  };
+};
+
+export const resetMinesweeper = () => {
+  return {
+    type: TYPES.RESET_MINESWEEPER,
   };
 };

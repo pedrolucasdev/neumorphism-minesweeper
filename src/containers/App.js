@@ -13,8 +13,8 @@ const AppWrapper = styled.div`
   width: 100vw;
   height: 100vh;
   position: relative;
-  background-color: ${props =>
-    props.selectedTheme == 'light'
+  background-color: ${(props) =>
+    props.selectedTheme === 'light'
       ? props.theme.colors.lightBackground
       : props.theme.colors.darkBackground};
 `;
@@ -26,14 +26,14 @@ const ThemeButton = styled.button`
   justify-content: center;
   align-items: center;
   font-size: 2rem;
-  background-color: ${props =>
-    props.selectedTheme == 'light'
+  background: ${(props) =>
+    props.selectedTheme === 'light'
       ? props.theme.colors.lightMainColor
-      : props.theme.colors.darkMainColor};
-  box-shadow: ${props =>
-    props.selectedTheme == 'light'
-      ? '5px 5px 10px 10px rgba(0, 0, 0, 0.1)'
-      : '5px 5px 10px 10px rgba(255,255,255, 0.1)'};
+      : 'linear-gradient(144.05deg, #32383E -69.07%, #17191C 122.22%)'};
+  box-shadow: ${(props) =>
+    props.selectedTheme === 'light'
+      ? ' -4px -2px 16px #FFFFFF, 4px 2px 16px rgba(136, 165, 191, 0.48)'
+      : '-4px -2px 16px rgba(195, 200, 205, 0.08), 4px 4px 18px rgba(0, 0, 0, 0.5);'};
   border-radius: 50%;
   position: absolute;
   right: 2vw;
@@ -42,7 +42,7 @@ const ThemeButton = styled.button`
 
 const App = ({ config, updateConfig }) => {
   function handleModeChange() {
-    if (config.theme == 'light') {
+    if (config.theme === 'light') {
       updateConfig({ theme: 'dark' });
     } else {
       updateConfig({ theme: 'light' });

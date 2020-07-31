@@ -1,10 +1,12 @@
 import * as TYPES from '../actions/types';
 import { getCell } from '../utils/utils';
 
-const INITIAL_STATE = {
-  board: generateBoard(),
-  won: false,
-  lost: false
+const INITIAL_STATE = () => {
+  return {
+    board: generateBoard(),
+    won: false,
+    lost: false,
+  };
 };
 
 function generateBoard() {
@@ -31,12 +33,12 @@ function generateBoard() {
 }
 
 function generateCell() {
-  const BOMB_CHANCE = 0.15;
+  const BOMB_CHANCE = 0.2;
   return {
     isFlagged: false,
     isRevealed: false,
     bombsAround: 0,
-    isBomb: Math.random() > 1 - BOMB_CHANCE
+    isBomb: Math.random() > 1 - BOMB_CHANCE,
   };
 }
 
@@ -51,10 +53,14 @@ function countBombsAround(board, x, y) {
   return count;
 }
 
-export default (state = INITIAL_STATE, action) => {
+export default (state = INITIAL_STATE(), action) => {
+  console.log(action);
   switch (action.type) {
     case TYPES.UPDATE_MINESWEEPER:
       return { ...state, ...action.payload };
+    case TYPES.RESET_MINESWEEPER:
+      console.log('XPTO');
+      return INITIAL_STATE();
     default:
       return state;
   }
