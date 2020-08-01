@@ -9,6 +9,7 @@ const INITIAL_STATE = () => {
   };
 };
 
+// Generate a 9x6 board and then updates the bombsAround attribute of each cell
 function generateBoard() {
   const NUMBER_OF_COLUMNS = 6;
   const NUMBER_OF_ROWS = 9;
@@ -32,6 +33,7 @@ function generateBoard() {
   return board;
 }
 
+//Generate a new board cell, with a 20% probability that it is a bomb
 function generateCell() {
   const BOMB_CHANCE = 0.2;
   return {
@@ -42,6 +44,7 @@ function generateCell() {
   };
 }
 
+//Iterate each neighbour cell and check if it is a bomb
 function countBombsAround(board, x, y) {
   let count = 0;
   for (let i = y - 1; i <= y + 1; i++) {
@@ -54,12 +57,10 @@ function countBombsAround(board, x, y) {
 }
 
 export default (state = INITIAL_STATE(), action) => {
-  console.log(action);
   switch (action.type) {
     case TYPES.UPDATE_MINESWEEPER:
       return { ...state, ...action.payload };
     case TYPES.RESET_MINESWEEPER:
-      console.log('XPTO');
       return INITIAL_STATE();
     default:
       return state;

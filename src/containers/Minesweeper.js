@@ -10,6 +10,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { getCell } from '../utils/utils';
 import { updateMinesweeper, resetMinesweeper } from '../actions';
+import {
+  ToastsContainer,
+  ToastsStore,
+  ToastsContainerPosition,
+} from 'react-toasts';
 
 const MinesweeperWrapper = styled.div`
   width: 20vw;
@@ -28,6 +33,13 @@ const MinesweeperWrapper = styled.div`
   padding-top: 5vh;
   position: relative;
   margin: 32px;
+
+  @media ${(props) => props.theme.mediaQueries.large} {
+    width: 45vw;
+  }
+  @media ${(props) => props.theme.mediaQueries.small} {
+    width: 85vw;
+  }
 `;
 
 const Header = styled.div`
@@ -104,23 +116,40 @@ const MinesweeperCell = styled.td`
   height: 50px;
   background: ${(props) =>
     props.selectedTheme === 'light'
-      ? props.theme.colors.lightMainColor
+      ? '#E3EDF7'
       : 'linear-gradient(144.05deg, #32383E -69.07%, #17191C 122.22%)'};
   box-shadow: ${(props) =>
     props.selectedTheme === 'light'
-      ? 'inset -4px -4px 16px rgba(255, 255, 255, 0.8), inset 4px 4px 12px rgba(136, 165, 191, 0.4)'
-      : 'inset -2px -2px 12px rgba(255, 255, 255, 0.06), inset 2px 3px 16px rgba(7, 7, 9, 0.8)'};
+      ? 'inset -3px -3px 7px #FFFFFF, inset 3px 3px 7px rgba(136, 165, 191, 0.48)'
+      : 'inset -2px -2px 10px rgba(255, 255, 255, 0.05), inset 2px 3px 10px #070709'};
   border-radius: 8px;
   text-align: center;
   vertical-align: middle;
   font-size: 1.5rem;
   font-weight: 800;
+
   &.hidden {
     background: linear-gradient(69.08deg, #f8ac75 2.63%, #d76238 132.25%);
     box-shadow: ${(props) =>
       props.selectedTheme === 'light'
         ? ' -6px -6px 16px rgba(255, 255, 255, 0.6), 4px 12px 16px rgba(244, 102, 0, 0.42)'
         : '-6px -6px 16px rgba(0, 0, 0, 0.6), 4px 12px 16px rgba(244, 102, 0, 0.2)'};
+    cursor: pointer;
+  }
+
+  @media ${(props) => props.theme.mediaQueries.large} {
+    width: 40px;
+    height: 40px;
+  }
+
+  @media ${(props) => props.theme.mediaQueries.medium} {
+    width: 30px;
+    height: 30px;
+  }
+
+  @media ${(props) => props.theme.mediaQueries.smallest} {
+    width: 25px;
+    height: 25px;
   }
 
   &.cell_1 {
@@ -166,12 +195,13 @@ const Minesweeper = ({
   resetMinesweeper,
 }) => {
   const [time, setTime] = useState(0);
+  const [gameInitiated, setGameInitiated] = useState(false);
+
   let timer;
-  function timeCounter() {}
 
   useEffect(() => {
     timer = setTimeout(() => {
-      if (!(minesweeper.lost || minesweeper.won)) {
+      if (!(minesweeper.lost || minesweeper.won) && gameInitiated) {
         setTime(time + 1);
       }
     }, 1000);
@@ -179,22 +209,24 @@ const Minesweeper = ({
     return () => clearTimeout(timer);
   });
 
+  //Restart the game
   function restart() {
     clearTimeout(timer);
     resetMinesweeper();
     setTime(0);
+    setGameInitiated(false);
   }
 
   function onLeftClick(x, y, minesweeperState, updateMinesweeper) {
     const { board, lost, won } = minesweeperState;
     if (lost || won) return;
 
-    if (time === 0) timeCounter();
+    if (time === 0) setGameInitiated(true);
 
     const clickedCell = board[y][x];
     let cellsToBeRevealed = [{ x, y }];
     if (clickedCell.bombsAround === 0)
-      checkCellNeighbours(board, x, y, cellsToBeRevealed);
+      checkNeighboringCells(board, x, y, cellsToBeRevealed);
     else if (clickedCell.isRevealed) {
       let flaggedCellsInRange = 0;
       let unflaggedCells = [];
@@ -232,12 +264,16 @@ const Minesweeper = ({
       wonNow = unrevealedCells === 0;
     }
 
-    //if (isLost && onLose) onLose();
-    //else if (isWon && onWin) onWin();
+    if (lostNow)
+      ToastsStore.error('You lost.. Try again next time!', 3000, 'customToast');
+    else if (wonNow)
+      ToastsStore.success('Congrats, you won !!', 3000, 'customToast');
+
     const newMinesweeperState = { board, lost: lostNow, won: wonNow };
     updateMinesweeper(newMinesweeperState);
   }
-  function checkCellNeighbours(board, x, y, cellsToBeRevealed) {
+
+  function checkNeighboringCells(board, x, y, cellsToBeRevealed) {
     const neighbours = [
       { x, y: y - 1 }, //top
       { x: x + 1, y }, //right
@@ -247,17 +283,18 @@ const Minesweeper = ({
 
     for (var i = 0; i < neighbours.length; i++) {
       const neighbour = neighbours[i];
-      const neighbourCell = getCell(board, neighbour.x, neighbour.y);
+      const neighbouringCell = getCell(board, neighbour.x, neighbour.y);
       const alreadyRevealed = cellsToBeRevealed.find(
         (p) => p.x === neighbour.x && p.y === neighbour.y
       );
-      if (neighbourCell && !neighbourCell.isBomb && !alreadyRevealed) {
+      if (neighbouringCell && !neighbouringCell.isBomb && !alreadyRevealed) {
         cellsToBeRevealed.push(neighbour);
-        if (neighbourCell.bombsAround === 0)
-          checkCellNeighbours(
+        if (neighbouringCell.bombsAround === 0)
+          //recursive call if neighbouring cell has no bombs around
+          checkNeighboringCells(
             board,
-            neighbourCell.x,
-            neighbourCell.y,
+            neighbouringCell.x,
+            neighbouringCell.y,
             cellsToBeRevealed
           );
       }
@@ -275,7 +312,7 @@ const Minesweeper = ({
     event.preventDefault();
     const { board, lost, won } = minesweeperState;
     if (lost || won) return;
-    if (time === 0) timeCounter();
+    if (time === 0) setGameInitiated(true);
     const cell = board[y][x];
     cell.isFlagged = !cell.isFlagged;
     updateMinesweeper({ board });
@@ -310,6 +347,7 @@ const Minesweeper = ({
             cellClass += ' flag';
             content = <FontAwesomeIcon icon={faFlag} />;
           }
+
           return (
             <MinesweeperCell
               selectedTheme={config.theme}
@@ -332,6 +370,10 @@ const Minesweeper = ({
 
   return (
     <MinesweeperWrapper selectedTheme={config.theme}>
+      <ToastsContainer
+        store={ToastsStore}
+        position={ToastsContainerPosition.TOP_CENTER}
+      />
       <Header>
         <Timer selectedTheme={config.theme}>
           <FontAwesomeIcon icon={faClock} className="icon" />

@@ -19,10 +19,10 @@ export default createGlobalStyle`
     html {
       font-size: 62.5%; //1rem = 10px
       box-sizing: border-box;
-      @media ${props => props.theme.mediaQueries.largest} {
+      @media ${(props) => props.theme.mediaQueries.largest} {
           font-size: 57.5%;
       }
-      @media ${props => props.theme.mediaQueries.large} {
+      @media ${(props) => props.theme.mediaQueries.large} {
           font-size: 55%;
       }
     }
@@ -42,5 +42,11 @@ export default createGlobalStyle`
       -webkit-tap-highlight-color: rgba(0,0,0,0);
       outline: none;
       border: none;
+    }
+
+    .customToast {
+      color: white !important;
+      font-size: 1.5rem !important;
+      font-weight: 600 !important;
     }
 `;

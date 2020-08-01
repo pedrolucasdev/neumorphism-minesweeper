@@ -15,8 +15,8 @@ const AppWrapper = styled.div`
   position: relative;
   background-color: ${(props) =>
     props.selectedTheme === 'light'
-      ? props.theme.colors.lightBackground
-      : props.theme.colors.darkBackground};
+      ? props.theme.colors.lightMainColor
+      : props.theme.colors.darkMainColor};
 `;
 
 const ThemeButton = styled.button`
@@ -42,11 +42,9 @@ const ThemeButton = styled.button`
 
 const App = ({ config, updateConfig }) => {
   function handleModeChange() {
-    if (config.theme === 'light') {
-      updateConfig({ theme: 'dark' });
-    } else {
-      updateConfig({ theme: 'light' });
-    }
+    config.theme === 'light'
+      ? updateConfig({ theme: 'dark' })
+      : updateConfig({ theme: 'light' });
   }
 
   return (
