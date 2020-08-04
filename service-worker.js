@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/neumorphism-minesweeper/precache-manifest.65bd35f702dfb30bc428c8f1835f74e9.js"
+  "/neumorphism-minesweeper/precache-manifest.aa90dc3ddc2f2a0d96fa886d195aebcf.js"
 );
 
 workbox.clientsClaim();

@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "94fb6129646227e74bcb",
-    "url": "/neumorphism-minesweeper/static/js/main.d8880588.chunk.js"
+    "revision": "b0d68336bf9fe8e74968",
+    "url": "/neumorphism-minesweeper/static/js/main.9e928e27.chunk.js"
   },
   {
     "revision": "71e58402bb0ca7cb4289",
@@ -12,7 +12,7 @@ self.__precacheManifest = [
     "url": "/neumorphism-minesweeper/static/js/2.41ed8ee8.chunk.js"
   },
   {
-    "revision": "a3d5e570e7d0d63bdbe9e48e852fb994",
+    "revision": "2a5742987275140c8942e99cee0272ca",
     "url": "/neumorphism-minesweeper/index.html"
   }
 ];
