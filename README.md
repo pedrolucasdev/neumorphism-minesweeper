@@ -1,4 +1,4 @@
-# Neumorphism Minesweeper
+# Neumorphism @ Minesweeper
 
 An neumorphism UI approach of Minesweeper.
 
