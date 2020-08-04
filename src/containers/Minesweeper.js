@@ -6,38 +6,45 @@ import {
   faFlag,
   faBomb,
   faClock,
-  faRedoAlt,
+  faRedoAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { getCell } from '../utils/utils';
 import { updateMinesweeper, resetMinesweeper } from '../actions';
 import {
   ToastsContainer,
   ToastsStore,
-  ToastsContainerPosition,
+  ToastsContainerPosition
 } from 'react-toasts';
 
 const MinesweeperWrapper = styled.div`
   width: 20vw;
   height: 80vh;
-  background: ${(props) =>
-    props.selectedTheme === 'light'
-      ? 'linear-gradient(200.6deg, #EBF2F9 19.14%, #C6D7EB 154.68%);'
-      : 'linear-gradient(200.6deg, #353A40 -3.02%, #121416 93.08%)'};
-  box-shadow: ${(props) =>
-    props.selectedTheme === 'light'
-      ? '-16px -16px 40px rgba(255, 255, 255, 0.8),16px 4px 64px rgba(18, 61, 101, 0.3),inset -8px -6px 80px rgba(255, 255, 255, 0.18)'
-      : '36px 12px 64px rgba(2, 3, 3, 0.7), -12px -20px 56px rgba(232, 237, 243, 0.05), inset -16px -6px 80px rgba(248, 249, 249, 0.03)'};
+
+  &.light {
+    background: linear-gradient(200.6deg, #ebf2f9 19.14%, #c6d7eb 154.68%);
+    box-shadow: -16px -16px 40px rgba(255, 255, 255, 0.8),
+      16px 4px 64px rgba(18, 61, 101, 0.3),
+      inset -8px -6px 80px rgba(255, 255, 255, 0.18);
+  }
+
+  &.dark {
+    background: linear-gradient(200.6deg, #353a40 -3.02%, #121416 93.08%);
+    box-shadow: 36px 12px 64px rgba(2, 3, 3, 0.7),
+      -12px -20px 56px rgba(232, 237, 243, 0.05),
+      inset -16px -6px 80px rgba(248, 249, 249, 0.03);
+  }
+
   border-radius: 32px;
-  diplay: flex;
+  display: flex;
   flex-direction: column;
   padding-top: 5vh;
   position: relative;
   margin: 32px;
 
-  @media ${(props) => props.theme.mediaQueries.large} {
+  @media ${props => props.theme.mediaQueries.large} {
     width: 45vw;
   }
-  @media ${(props) => props.theme.mediaQueries.small} {
+  @media ${props => props.theme.mediaQueries.small} {
     width: 85vw;
   }
 `;
@@ -57,15 +64,19 @@ const Timer = styled.div`
   left: 16px;
   border-radius: 16px;
   width: 45%;
-  height: 80%;
-  background: ${(props) =>
-    props.selectedTheme === 'light'
-      ? '#E3EDF7'
-      : 'linear-gradient(144.05deg,#32383E -69.07%,#17191C 122.22%)'};
-  box-shadow: ${(props) =>
-    props.selectedTheme === 'light'
-      ? 'inset -3px -3px 7px #FFFFFF, inset 2px 2px 5px rgba(136, 165, 191, 0.38)'
-      : ' inset -2px -2px 10px rgba(255, 255, 255, 0.05), inset 2px 3px 10px #070709'};
+  height: 4rem;
+
+  ${MinesweeperWrapper}.light & {
+    background: #e3edf7;
+    box-shadow: inset -3px -3px 7px #ffffff,
+      inset 2px 2px 5px rgba(136, 165, 191, 0.38);
+  }
+
+  ${MinesweeperWrapper}.dark & {
+    background: linear-gradient(144.05deg, #32383e -69.07%, #17191c 122.22%);
+    box-shadow: inset -2px -2px 10px rgba(255, 255, 255, 0.05),
+      inset 2px 3px 10px #070709;
+  }
 
   .icon {
     color: #516d7b !important;
@@ -88,14 +99,18 @@ const RestartButton = styled.button`
   justify-content: center;
   align-items: center;
   font-size: 1.5rem;
-  background: ${(props) =>
-    props.selectedTheme === 'light'
-      ? props.theme.colors.lightMainColor
-      : 'linear-gradient(144.05deg, #32383E -69.07%, #17191C 122.22%)'};
-  box-shadow: ${(props) =>
-    props.selectedTheme === 'light'
-      ? ' -4px -2px 16px #FFFFFF, 4px 2px 16px rgba(136, 165, 191, 0.48)'
-      : '-4px -2px 16px rgba(195, 200, 205, 0.08), 4px 4px 18px rgba(0, 0, 0, 0.5);'};
+
+  ${MinesweeperWrapper}.light & {
+    background: ${props => props.theme.colors.lightMainColor};
+    box-shadow: -4px -2px 16px #ffffff, 4px 2px 16px rgba(136, 165, 191, 0.48);
+  }
+
+  ${MinesweeperWrapper}.dark & {
+    background: linear-gradient(144.05deg, #32383e -69.07%, #17191c 122.22%);
+    box-shadow: -4px -2px 16px rgba(195, 200, 205, 0.08),
+      4px 4px 18px rgba(0, 0, 0, 0.5);
+  }
+
   border-radius: 50%;
   position: absolute;
   right: 16px;
@@ -114,14 +129,19 @@ const MinesweeperRow = styled.tr``;
 const MinesweeperCell = styled.td`
   width: 50px;
   height: 50px;
-  background: ${(props) =>
-    props.selectedTheme === 'light'
-      ? '#E3EDF7'
-      : 'linear-gradient(144.05deg, #32383E -69.07%, #17191C 122.22%)'};
-  box-shadow: ${(props) =>
-    props.selectedTheme === 'light'
-      ? 'inset -3px -3px 7px #FFFFFF, inset 3px 3px 7px rgba(136, 165, 191, 0.48)'
-      : 'inset -2px -2px 10px rgba(255, 255, 255, 0.05), inset 2px 3px 10px #070709'};
+
+  ${MinesweeperWrapper}.light & {
+    background: #e3edf7;
+    box-shadow: inset -3px -3px 7px #ffffff,
+      inset 3px 3px 7px rgba(136, 165, 191, 0.48);
+  }
+
+  ${MinesweeperWrapper}.dark & {
+    background: linear-gradient(144.05deg, #32383e -69.07%, #17191c 122.22%);
+    box-shadow: inset -2px -2px 10px rgba(255, 255, 255, 0.05),
+      inset 2px 3px 10px #070709;
+  }
+
   border-radius: 8px;
   text-align: center;
   vertical-align: middle;
@@ -129,25 +149,35 @@ const MinesweeperCell = styled.td`
   font-weight: 800;
 
   &.hidden {
-    background: linear-gradient(69.08deg, #f8ac75 2.63%, #d76238 132.25%);
-    box-shadow: ${(props) =>
-      props.selectedTheme === 'light'
-        ? ' -6px -6px 16px rgba(255, 255, 255, 0.6), 4px 12px 16px rgba(244, 102, 0, 0.42)'
-        : '-6px -6px 16px rgba(0, 0, 0, 0.6), 4px 12px 16px rgba(244, 102, 0, 0.2)'};
+    background: linear-gradient(
+      69.08deg,
+      #f8ac75 2.63%,
+      #d76238 132.25%
+    ) !important;
+
+    ${MinesweeperWrapper}.light & {
+      box-shadow: -6px -6px 16px rgba(255, 255, 255, 0.6),
+        4px 12px 16px rgba(244, 102, 0, 0.42);
+    }
+
+    ${MinesweeperWrapper}.dark & {
+      box-shadow: -6px -6px 16px rgba(0, 0, 0, 0.6),
+        4px 12px 16px rgba(244, 102, 0, 0.2);
+    }
     cursor: pointer;
   }
 
-  @media ${(props) => props.theme.mediaQueries.large} {
+  @media ${props => props.theme.mediaQueries.large} {
     width: 40px;
     height: 40px;
   }
 
-  @media ${(props) => props.theme.mediaQueries.medium} {
+  @media ${props => props.theme.mediaQueries.medium} {
     width: 30px;
     height: 30px;
   }
 
-  @media ${(props) => props.theme.mediaQueries.smallest} {
+  @media ${props => props.theme.mediaQueries.smallest} {
     width: 25px;
     height: 25px;
   }
@@ -192,7 +222,7 @@ const Minesweeper = ({
   config,
   minesweeper,
   updateMinesweeper,
-  resetMinesweeper,
+  resetMinesweeper
 }) => {
   const [time, setTime] = useState(0);
   const [gameInitiated, setGameInitiated] = useState(false);
@@ -246,7 +276,7 @@ const Minesweeper = ({
     let lostNow = false;
     let wonNow = false;
 
-    cellsToBeRevealed.forEach((obj) => {
+    cellsToBeRevealed.forEach(obj => {
       const cell = board[obj.y][obj.x];
       cell.isRevealed = true;
       if (cell.isBomb) lostNow = true;
@@ -254,8 +284,8 @@ const Minesweeper = ({
 
     if (!lostNow) {
       let unrevealedCells = 0;
-      board.forEach((row) => {
-        row.forEach((cell) => {
+      board.forEach(row => {
+        row.forEach(cell => {
           if (!cell.isRevealed && !cell.isBomb) {
             unrevealedCells++;
           }
@@ -278,14 +308,14 @@ const Minesweeper = ({
       { x, y: y - 1 }, //top
       { x: x + 1, y }, //right
       { x, y: y + 1 }, //bottom
-      { x: x - 1, y }, //left
+      { x: x - 1, y } //left
     ];
 
     for (var i = 0; i < neighbours.length; i++) {
       const neighbour = neighbours[i];
       const neighbouringCell = getCell(board, neighbour.x, neighbour.y);
       const alreadyRevealed = cellsToBeRevealed.find(
-        (p) => p.x === neighbour.x && p.y === neighbour.y
+        p => p.x === neighbour.x && p.y === neighbour.y
       );
       if (neighbouringCell && !neighbouringCell.isBomb && !alreadyRevealed) {
         cellsToBeRevealed.push(neighbour);
@@ -350,13 +380,12 @@ const Minesweeper = ({
 
           return (
             <MinesweeperCell
-              selectedTheme={config.theme}
               className={cellClass}
               key={x}
               onClick={() => {
                 onLeftClick(x, y, minesweeper, updateMinesweeper);
               }}
-              onContextMenu={(event) => {
+              onContextMenu={event => {
                 onRightClick(event, x, y, minesweeper, updateMinesweeper);
               }}
             >
@@ -369,18 +398,17 @@ const Minesweeper = ({
   });
 
   return (
-    <MinesweeperWrapper selectedTheme={config.theme}>
+    <MinesweeperWrapper className={config.theme}>
       <ToastsContainer
         store={ToastsStore}
         position={ToastsContainerPosition.TOP_CENTER}
       />
       <Header>
-        <Timer selectedTheme={config.theme}>
+        <Timer>
           <FontAwesomeIcon icon={faClock} className="icon" />
           <div className="time">{secondsToString(time)}</div>
         </Timer>
         <RestartButton
-          selectedTheme={config.theme}
           onClick={() => {
             restart();
           }}
@@ -401,5 +429,5 @@ const mapStateToProps = ({ config, minesweeper }) => {
 
 export default connect(mapStateToProps, {
   updateMinesweeper,
-  resetMinesweeper,
+  resetMinesweeper
 })(Minesweeper);
