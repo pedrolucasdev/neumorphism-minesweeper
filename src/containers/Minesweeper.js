@@ -17,7 +17,7 @@ import {
 } from 'react-toasts';
 
 const MinesweeperWrapper = styled.div`
-  width: 20vw;
+  width: 25vw;
   height: 80vh;
 
   &.light {
