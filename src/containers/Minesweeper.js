@@ -18,7 +18,7 @@ import {
 
 const MinesweeperWrapper = styled.div`
   width: 25vw;
-  height: 80vh;
+  height: 90vh;
 
   &.light {
     background: linear-gradient(200.6deg, #ebf2f9 19.14%, #c6d7eb 154.68%);
@@ -43,9 +43,11 @@ const MinesweeperWrapper = styled.div`
 
   @media ${props => props.theme.mediaQueries.large} {
     width: 45vw;
+    height: 80vh;
   }
   @media ${props => props.theme.mediaQueries.small} {
     width: 85vw;
+    height: 80vh;
   }
 `;
 
